@@ -1,1 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IMS Pre-Radio Survey Questionnaire</title>
+  <style>
+    :root{
+      --ink:#111827;
+      --muted:#6b7280;
+      --line:#222;
+      --soft:#f3f4f6;
+      --head:#d9eaf7;
+      --accent:#0f4c81;
+      --accent2:#eef6fc;
+      --danger:#b91c1c;
+      --ok:#047857;
+      --paper:#fff;
+      --bg:#edf2f7;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height:1.35;
+      font-size:14px;
+    }
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:10;
+      background:#0f172a;
+      color:#fff;
+      padding:10px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      box-shadow:0 2px 8px rgba(0,0,0,.18);
+    }
+    .topbar strong{font-size:15px;letter-spacing:.2px}
+    .topbar .actions{display:flex;gap:8px;flex-wrap:wrap}
+    button{
+      border:0;
+      border-radius:6px;
+      padding:8px 12px;
+      cursor:pointer;
+      font-weight:700;
+      font-size:13px;
+    }
+    button.primary{background:#2563eb;color:#fff}
+    button.secondary{background:#e5e7eb;color:#111827}
+    button.success{background:#059669;color:#fff}
+    button.warn{background:#f59e0b;color:#111827}
+    .page{
+      max-width:980px;
+      margin:28px auto;
+      padding:32px 36px 42px;
+      background:var(--paper);
+      border:1px solid #cbd5e1;
+      box-shadow:0 10px 28px rgba(15,23,42,.10);
+    }
+    .title-block{text-align:center;margin-bottom:16px}
+    .appendix{font-weight:700;letter-spacing:.5px;margin-bottom:5px}
+    h1{
+      margin:0;
+      font-size:20px;
+      text-decoration:underline;
+      color:#111827;
+      letter-spacing:.3px;
+    }
+    .instruction{
+      margin:12px 0 18px;
+      padding:10px 12px;
+      background:var(--accent2);
+      border-left:5px solid var(--accent);
+      color:#1f2937;
+      font-size:13px;
+    }
+    table.form-table{
+      width:100%;
+      border-collapse:collapse;
+      margin:13px 0 18px;
+      table-layout:fixed;
+      border:1.5px solid var(--line);
+    }
+    .form-table th,
+    .form-table td{
+      border:1px solid var(--line);
+      padding:7px 8px;
+      vertical-align:middle;
+      overflow-wrap:anywhere;
+    }
+    .form-table th{
+      background:var(--head);
+      font-weight:700;
+      text-align:center;
+    }
+    .section-title{
+      text-align:left!important;
+      background:#cfe3f3!important;
+      font-size:14px;
+    }
+    .label{font-weight:700;background:#fafafa;width:30%}
+    .center{text-align:center}
+    .number-col{width:44px;text-align:center;font-weight:700}
+    .check-col{width:58px;text-align:center}
+    .date-col{width:160px;text-align:left}
+    input[type="text"], input[type="date"], input[type="email"], input[type="tel"], textarea, select{
+      width:100%;
+      min-height:30px;
+      border:1px solid #9ca3af;
+      border-radius:4px;
+      padding:5px 7px;
+      font:inherit;
+      background:#fff;
+    }
+    textarea{min-height:90px;resize:vertical}
+    .mini-input{width:110px!important;display:inline-block;min-height:26px;margin-left:4px}
+    .checkbox-row{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+    .checkbox-row label{white-space:nowrap;display:inline-flex;align-items:center;gap:5px;font-weight:700}
+    input[type="checkbox"], input[type="radio"]{width:18px;height:18px;vertical-align:middle;accent-color:var(--accent)}
+    .na{font-weight:700;color:#374151;text-align:center;background:#f9fafb}
+    .subitem{padding-left:24px!important;font-size:13px}
+    .remarks-box textarea{min-height:130px}
+    .footer-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:20px}
+    .sign-box{border:1px solid #333;min-height:84px;padding:8px;background:#fafafa}
+    .sign-box strong{display:block;margin-bottom:26px}
+    .note-small{color:var(--muted);font-size:12px;margin-top:6px}
+    .status-message{margin-top:10px;font-size:13px;color:var(--ok);font-weight:700;display:none}
+    .required-star{color:var(--danger);font-weight:700}
+
+    .submit-panel{margin:22px 0 8px;padding:18px;background:#eef6fc;border:1px solid #b7d7ee;border-radius:10px;text-align:center}
+    .submit-btn{background:#0f4c81;color:#fff;border:none;border-radius:8px;padding:13px 34px;font-size:16px;font-weight:700;cursor:pointer}
+    .submit-btn:disabled{opacity:.55;cursor:not-allowed}
+    .submit-status{display:none;margin-top:12px;font-weight:700;color:#047857}
+    .submit-error{display:none;margin-top:12px;font-weight:700;color:#b91c1c}
+    @media (max-width:760px){
+      .page{margin:0;padding:18px 12px;border:0;box-shadow:none}
+      .topbar{position:static;align-items:flex-start;flex-direction:column}
+      table.form-table{font-size:12px}
+      .form-table th,.form-table td{padding:6px 5px}
+      .footer-grid{grid-template-columns:1fr}
+      .checkbox-row{justify-content:flex-start}
+    }
+    @media print{
+      body{background:#fff;font-size:12px}
+      .topbar,.instruction,.status-message{display:none!important}
+      .page{max-width:100%;margin:0;padding:0;border:0;box-shadow:none}
+      input,textarea,select{border:0;border-bottom:1px solid #555;border-radius:0;background:transparent;min-height:24px;padding:2px 3px}
+      input[type="checkbox"],input[type="radio"]{width:14px;height:14px}
+      table.form-table{page-break-inside:auto;margin:8px 0 12px}
+      tr{page-break-inside:avoid;page-break-after:auto}
+    }
+  </style>
+  <!-- PDF generator for GitHub Pages. Runs in customer browser; data is sent only to your Power Automate URL. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+  <div class="topbar">
+    <strong>IMS Pre-Radio Survey Questionnaire - Web Data Collection Form</strong>
+    <div class="actions">
+      <button class="primary" type="button" onclick="window.print()">Print / PDF</button>
+      <button class="success" type="button" onclick="exportCSV()">Download CSV</button>
+      <button class="secondary" type="button" onclick="exportJSON()">Download JSON</button>
+      <button class="warn" type="button" onclick="resetFormSafe()">Clear Form</button>
+    </div>
+  </div>
+
+  <main class="page">
+    <form id="imsForm" method="post" action="/api/ims-pre-survey-submit">
+      <div class="title-block">
+        <div class="appendix">APPENDIX</div>
+        <h1>PRE-RADIO SURVEY QUESTIONNAIRE</h1>
+      </div>
+      <div class="instruction">
+        <strong>Customer instruction:</strong> Fill all applicable fields before vessel attendance. Use the checkboxes where applicable. If a field is not applicable, write N/A. The form can be printed to PDF or exported as CSV/JSON using the buttons above.
+      </div>
+
+      <table class="form-table">
+        <tr><th colspan="2" class="section-title">1.1 SHIP PARTICULARS</th></tr>
+        <tr><td class="label">Vessel Name <span class="required-star">*</span></td><td><input required type="text" name="vessel_name"></td></tr>
+        <tr><td class="label">Call Sign</td><td><input type="text" name="call_sign"></td></tr>
+        <tr><td class="label">MMSI</td><td><input type="text" name="mmsi"></td></tr>
+        <tr><td class="label">IMO Number <span class="required-star">*</span></td><td><input required type="text" name="imo_number"></td></tr>
+        <tr><td class="label">Class</td><td><input type="text" name="class"></td></tr>
+        <tr><td class="label">Date of Keel Laid</td><td><input type="date" name="date_keel_laid"></td></tr>
+        <tr><td class="label">Flag and Port of Registry</td><td><input type="text" name="flag_port_registry"></td></tr>
+        <tr><td class="label">Sea Areas</td><td><input type="text" name="sea_areas" placeholder="A1 / A2 / A3 / A4"></td></tr>
+
+        <tr><td class="label">Customer / Company Name</td><td><input type="text" name="customer_name" placeholder="Company / agent / superintendent"></td></tr>
+        <tr><td class="label">Customer Email</td><td><input type="email" name="customer_email" placeholder="customer@example.com"></td></tr>
+      </table>
+
+      <table class="form-table">
+        <tr>
+          <th class="section-title">1.2 SART</th>
+          <th>SART 1 : <span class="checkbox-row"><label><input type="checkbox" name="sart1_type" value="AIS SART">AIS SART</label><label><input type="checkbox" name="sart1_type" value="RADAR SART">RADAR SART</label></span></th>
+          <th>SART 2 : <span class="checkbox-row"><label><input type="checkbox" name="sart2_type" value="AIS SART">AIS SART</label><label><input type="checkbox" name="sart2_type" value="RADAR SART">RADAR SART</label></span></th>
+        </tr>
+        <tr><td class="label">Self-test</td><td><input type="text" name="sart1_self_test"></td><td><input type="text" name="sart2_self_test"></td></tr>
+        <tr><td class="label">Make &amp; Model</td><td><input type="text" name="sart1_make_model"></td><td><input type="text" name="sart2_make_model"></td></tr>
+        <tr><td class="label">Battery expiry date</td><td><input type="date" name="sart1_battery_expiry"></td><td><input type="date" name="sart2_battery_expiry"></td></tr>
+      </table>
+
+      <table class="form-table">
+        <tr><th class="section-title">1.3 EPIRB</th><th>EPIRB 1</th><th>EPIRB 2</th></tr>
+        <tr><td class="label">Self-test</td><td><input type="text" name="epirb1_self_test"></td><td class="na">N/A</td></tr>
+        <tr><td class="label">Make &amp; Model</td><td><input type="text" name="epirb1_make_model"></td><td><input type="text" name="epirb2_make_model"></td></tr>
+        <tr><td class="label">Battery expiry date</td><td><input type="date" name="epirb1_battery_expiry"></td><td><input type="date" name="epirb2_battery_expiry"></td></tr>
+        <tr><td class="label">HRU Expiry date</td><td><input type="date" name="epirb1_hru_expiry"></td><td><input type="date" name="epirb2_hru_expiry"></td></tr>
+      </table>
+
+      <table class="form-table">
+        <tr><th class="section-title">1.4 GMDSS Handheld Radios</th><th>No. 1</th><th>No. 2</th><th>No. 3</th></tr>
+        <tr><td class="label">Self-test</td><td><input type="text" name="gmdss_hh1_self_test"></td><td><input type="text" name="gmdss_hh2_self_test"></td><td><input type="text" name="gmdss_hh3_self_test"></td></tr>
+        <tr><td class="label">Make &amp; Model</td><td><input type="text" name="gmdss_hh1_make_model"></td><td><input type="text" name="gmdss_hh2_make_model"></td><td><input type="text" name="gmdss_hh3_make_model"></td></tr>
+        <tr><td class="label">Primary Battery expiry date</td><td><input type="date" name="gmdss_hh1_battery_expiry"></td><td><input type="date" name="gmdss_hh2_battery_expiry"></td><td><input type="date" name="gmdss_hh3_battery_expiry"></td></tr>
+      </table>
+
+      <table class="form-table">
+        <tr><th class="section-title">1.5 MFHF / DSC</th><th>No. 1</th><th>No. 2</th></tr>
+        <tr><td class="label">RT, DSC &amp; Self-test</td><td><input type="text" name="mfhf1_test"></td><td><input type="text" name="mfhf2_test"></td></tr>
+        <tr><td class="label">Make &amp; Model</td><td><input type="text" name="mfhf1_make_model"></td><td><input type="text" name="mfhf2_make_model"></td></tr>
+      </table>
+
+      <table class="form-table">
+        <tr><th class="section-title">1.6 VHF / DSC</th><th>No. 1</th><th>No. 2</th></tr>
+        <tr><td class="label">RT, DSC &amp; Self-test</td><td><input type="text" name="vhf1_test"></td><td><input type="text" name="vhf2_test"></td></tr>
+        <tr><td class="label">Make &amp; Model</td><td><input type="text" name="vhf1_make_model"></td><td><input type="text" name="vhf2_make_model"></td></tr>
+      </table>
+
+      <table class="form-table">
+        <tr><th colspan="2" class="section-title">1.8 AIS PARTICULARS</th></tr>
+        <tr><td class="label">Make &amp; Model</td><td><input type="text" name="ais_make_model"></td></tr>
+        <tr><td class="label">Self-test</td><td><input type="text" name="ais_self_test"></td></tr>
+        <tr><td class="label">Own Display Available</td><td><span class="checkbox-row"><label><input type="radio" name="ais_own_display" value="Yes">Yes</label><label><input type="radio" name="ais_own_display" value="No, Integrated with Radar/ECDIS">No, Integrated with Radar/ECDIS</label></span></td></tr>
+        <tr><td class="label">Own ship data</td><td><textarea name="ais_own_ship_data"></textarea></td></tr>
+      </table>
+
+      <table class="form-table">
+        <tr>
+          <th class="section-title">1.9 SHIP EARTH STATION</th>
+          <th>No. 1 - <span class="checkbox-row"><label><input type="checkbox" name="ses1_type" value="Inmarsat">Inmarsat</label><label><input type="checkbox" name="ses1_type" value="Iridium">Iridium</label></span></th>
+          <th>No. 2 - <span class="checkbox-row"><label><input type="checkbox" name="ses2_type" value="Inmarsat">Inmarsat</label><label><input type="checkbox" name="ses2_type" value="Iridium">Iridium</label></span></th>
+        </tr>
+        <tr><td class="label">Self-Test / PV Test</td><td><input type="text" name="ses1_test"></td><td><input type="text" name="ses2_test"></td></tr>
+        <tr><td class="label">Make &amp; Model</td><td><input type="text" name="ses1_make_model"></td><td><input type="text" name="ses2_make_model"></td></tr>
+        <tr>
+          <td class="label">SSAS and LRIT Available</td>
+          <td><span class="checkbox-row"><label><input type="checkbox" name="ses1_available" value="SSAS">SSAS</label><label><input type="checkbox" name="ses1_available" value="LRIT">LRIT</label></span></td>
+          <td><span class="checkbox-row"><label><input type="checkbox" name="ses2_available" value="SSAS">SSAS</label><label><input type="checkbox" name="ses2_available" value="LRIT">LRIT</label></span></td>
+        </tr>
+      </table>
+
+      <table class="form-table">
+        <tr><th class="section-title">1.7 SSAS Particulars.</th><th><span class="checkbox-row"><label><input type="checkbox" name="ssas_source" value="Standalone">Standalone</label><label><input type="checkbox" name="ssas_source" value="SES No.1">SES No.1</label><label><input type="checkbox" name="ssas_source" value="SES No.2">SES No.2</label></span></th></tr>
+        <tr><td class="label">Make &amp; Model</td><td><input type="text" name="ssas_make_model"></td></tr>
+      </table>
+
+      <h2 style="font-size:16px;text-decoration:underline;margin:18px 0 8px;">COPIES OF THE FOLLOWING REQUIRED ON BOARD:</h2>
+      <h3 style="font-size:14px;margin:0 0 8px;">Certificates / Documents</h3>
+      <table class="form-table">
+        <tr><th class="number-col">No.</th><th colspan="2">Certificate / Document</th><th class="check-col">✓</th></tr>
+        <tr><td class="number-col">1.</td><td colspan="2">Valid Ship Station Radio License</td><td class="check-col"><input type="checkbox" name="doc_ship_station_radio_license"></td></tr>
+        <tr><td class="number-col">2.</td><td colspan="2">Valid Cargo Ship Safety Radio Certificate + Form R</td><td class="check-col"><input type="checkbox" name="doc_cargo_ship_safety_radio_certificate"></td></tr>
+        <tr><td class="number-col">3.</td><td colspan="2">Latest Record of Radio equipment installation Onboard (Class Form)</td><td class="check-col"><input type="checkbox" name="doc_radio_equipment_installation_record"></td></tr>
+        <tr><td class="number-col">4.</td><td>LRIT Conformance Report</td><td class="date-col">Date: <input class="mini-input" type="date" name="doc_lrit_date"></td><td class="check-col"><input type="checkbox" name="doc_lrit_conformance_report"></td></tr>
+        <tr><td class="number-col">5.</td><td>Latest SSAS Test report and Test Confirmation</td><td class="date-col">Date: <input class="mini-input" type="date" name="doc_ssas_test_date"></td><td class="check-col"><input type="checkbox" name="doc_ssas_test_report"></td></tr>
+        <tr><td class="number-col">6.</td><td colspan="2">Valid GMDSS Shore Based Maintenance Contract</td><td class="check-col"><input type="checkbox" name="doc_gmdss_sbm_contract"></td></tr>
+        <tr><td class="number-col">7.</td><td colspan="2">GMDSS GOC with Flag Endorsement for Minimum of 2 Operators</td><td class="check-col"><input type="checkbox" name="doc_gmdss_goc_flag_endorsement"></td></tr>
+        <tr><td class="number-col">8.</td><td colspan="2">Valid EPIRB Shore Based Maintenance Record</td><td class="check-col"><input type="checkbox" name="doc_epirb_sbm_record"></td></tr>
+        <tr><td class="number-col" rowspan="6">9.</td><td colspan="2"><strong>Latest ITU publications available onboard</strong></td><td class="check-col"></td></tr>
+        <tr><td class="subitem" colspan="2">- List IV - List of Coast Stations and Special Service Stations</td><td class="check-col"><input type="checkbox" name="doc_itu_list_iv"></td></tr>
+        <tr><td class="subitem" colspan="2">- List V - List of Ship Stations and Maritime Mobile Service Identity Assignments:</td><td class="check-col"><input type="checkbox" name="doc_itu_list_v"></td></tr>
+        <tr><td class="subitem" colspan="2">- Manual for Use by the Maritime Mobile and Maritime Mobile-Satellite Services (Maritime Manual)</td><td class="check-col"><input type="checkbox" name="doc_itu_maritime_manual"></td></tr>
+        <tr><td class="subitem" colspan="2">- GMDSS Manual - 2024</td><td class="check-col"><input type="checkbox" name="doc_gmdss_manual_2024"></td></tr>
+        <tr><td class="subitem" colspan="2">- IAMSAR Manual Volume III</td><td class="check-col"><input type="checkbox" name="doc_iamsar_manual_volume_iii"></td></tr>
+        <tr><td class="number-col">10.</td><td colspan="2">Latest Radio Survey Checklist Class Form</td><td class="check-col"><input type="checkbox" name="doc_radio_survey_checklist_class_form"></td></tr>
+        <tr><td class="number-col">11.</td><td colspan="2">Latest EPIRB Annual test Certificate</td><td class="check-col"><input type="checkbox" name="doc_epirb_annual_test_certificate"></td></tr>
+        <tr><td class="number-col">12.</td><td colspan="2">GMDSS Battery Capacity Test within One year time of the date of survey</td><td class="check-col"><input type="checkbox" name="doc_gmdss_battery_capacity_test"></td></tr>
+      </table>
+
+      <table class="form-table remarks-box">
+        <tr><th>Vessel Remarks:-</th></tr>
+        <tr><td><textarea name="vessel_remarks" placeholder="Enter remarks here..."></textarea></td></tr>
+      </table>
+
+      <div class="footer-grid">
+        <div class="sign-box"><strong>Prepared By / Vessel Representative</strong>Name / Rank / Date:</div>
+        <div class="sign-box"><strong>Checked By / Service Engineer</strong>Name / Date:</div>
+        <div class="sign-box"><strong>Company Stamp / Signature</strong></div>
+      </div>
+
+      <div class="submit-panel">
+        <button id="submitBtn" type="button" class="submit-btn" onclick="submitSurveyToPowerAutomate()">Submit Survey & Email PDF</button>
+        <div id="submitStatus" class="submit-status">Submitting survey. Please do not close this page.</div>
+        <div id="submitError" class="submit-error"></div>
+        <div class="note-small">After successful submission, Elcome Service Team will receive the filled survey as a PDF attachment.</div>
+      </div>
+      <p class="note-small">Static HTML note: submit button posts the filled survey PDF to your Power Automate HTTP endpoint.</p>
+      <div id="statusMsg" class="status-message">Export completed.</div>
+    </form>
+  </main>
+
+  <script>
+    function collectFormData(){
+      const form = document.getElementById('imsForm');
+      const data = {};
+      const elements = Array.from(form.elements).filter(el => el.name);
+      elements.forEach(el => {
+        if(el.type === 'checkbox'){
+          if(!data[el.name]) data[el.name] = [];
+          if(el.checked) data[el.name].push(el.value || 'Yes');
+        } else if(el.type === 'radio'){
+          if(el.checked) data[el.name] = el.value;
+          else if(!(el.name in data)) data[el.name] = '';
+        } else {
+          data[el.name] = el.value || '';
+        }
+      });
+      Object.keys(data).forEach(k => { if(Array.isArray(data[k])) data[k] = data[k].join('; '); });
+      data.exported_at = new Date().toISOString();
+      return data;
+    }
+    function downloadFile(filename, text, mime){
+      const blob = new Blob([text], {type:mime});
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      URL.revokeObjectURL(link.href);
+      link.remove();
+      showStatus('Export completed: ' + filename);
+    }
+    function exportJSON(){
+      const data = collectFormData();
+      const vessel = (data.vessel_name || 'vessel').replace(/[^a-z0-9_-]+/gi,'_');
+      downloadFile('IMS_Pre_Survey_' + vessel + '.json', JSON.stringify(data, null, 2), 'application/json;charset=utf-8');
+    }
+    function exportCSV(){
+      const data = collectFormData();
+      const keys = Object.keys(data);
+      const escapeCSV = value => '"' + String(value ?? '').replace(/"/g,'""') + '"';
+      const csv = keys.map(escapeCSV).join(',') + '\n' + keys.map(k => escapeCSV(data[k])).join(',');
+      const vessel = (data.vessel_name || 'vessel').replace(/[^a-z0-9_-]+/gi,'_');
+      downloadFile('IMS_Pre_Survey_' + vessel + '.csv', csv, 'text/csv;charset=utf-8');
+    }
+    function resetFormSafe(){
+      if(confirm('Clear all entered data from this form?')){
+        document.getElementById('imsForm').reset();
+        showStatus('Form cleared.');
+      }
+    }
+
+
+    // ================= POWER AUTOMATE SUBMIT SETTINGS =================
+    // Paste your Power Automate HTTP POST URL between the quotes below.
+    const POWER_AUTOMATE_URL = "PASTE_POWER_AUTOMATE_HTTP_POST_URL_HERE";
+
+    function safeFileText(value){
+      return String(value || 'IMS_Survey').replace(/[^a-z0-9_-]+/gi, '_').replace(/^_+|_+$/g, '') || 'IMS_Survey';
+    }
+
+    async function createSurveyPdfBase64(){
+      const pageElement = document.querySelector('.page');
+      const vessel = safeFileText(document.querySelector('[name="vessel_name"]')?.value || 'Vessel');
+      const imo = safeFileText(document.querySelector('[name="imo_number"]')?.value || 'IMO');
+      const filename = `IMS_Pre_Survey_${vessel}_${imo}.pdf`;
+
+      const options = {
+        margin: [8, 8, 8, 8],
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.96 },
+        html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      };
+
+      const pdfBlob = await html2pdf().set(options).from(pageElement).outputPdf('blob');
+      const base64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(String(reader.result).split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(pdfBlob);
+      });
+      return { filename, base64 };
+    }
+
+    async function submitSurveyToPowerAutomate(){
+      const form = document.getElementById('imsForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const status = document.getElementById('submitStatus');
+      const error = document.getElementById('submitError');
+
+      error.style.display = 'none';
+      status.style.display = 'block';
+
+      if(!form.reportValidity()) {
+        status.style.display = 'none';
+        return;
+      }
+
+      if(!POWER_AUTOMATE_URL || POWER_AUTOMATE_URL.includes('PASTE_POWER_AUTOMATE')){
+        status.style.display = 'none';
+        error.textContent = 'Power Automate URL is not configured. Paste your HTTP POST URL into POWER_AUTOMATE_URL.';
+        error.style.display = 'block';
+        return;
+      }
+
+      submitBtn.disabled = true;
+      try{
+        const data = collectFormData();
+        const pdf = await createSurveyPdfBase64();
+        const payload = {
+          submittedAt: new Date().toISOString(),
+          vesselName: data.vessel_name || '',
+          imoNumber: data.imo_number || '',
+          callSign: data.call_sign || '',
+          customerName: data.customer_name || '',
+          customerEmail: data.customer_email || '',
+          pdfFileName: pdf.filename,
+          pdfBase64: pdf.base64,
+          formJson: JSON.stringify(data)
+        };
+
+        // GitHub Pages safe submit. no-cors avoids browser CORS blocking with Power Automate HTTP trigger.
+        await fetch(POWER_AUTOMATE_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+          body: JSON.stringify(payload)
+        });
+
+        status.textContent = 'Survey submitted successfully. Email notification with PDF attachment has been sent to Elcome workflow.';
+        showStatus('Survey submitted successfully.');
+      }catch(e){
+        console.error(e);
+        status.style.display = 'none';
+        error.textContent = 'Submit failed. Check Power Automate URL and browser console.';
+        error.style.display = 'block';
+      }finally{
+        submitBtn.disabled = false;
+      }
+    }
+
+    function showStatus(msg){
+      const el = document.getElementById('statusMsg');
+      el.textContent = msg;
+      el.style.display = 'block';
+      setTimeout(() => { el.style.display = 'none'; }, 4000);
+    }
+  </script>
+</body>
+</html>
 
